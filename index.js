@@ -1,13 +1,13 @@
 function getLettersFromString(string) {
   const letters = {};
 
-  string.split("").forEach((letter) => {
-    if (!letter.match(/[a-z]/i)) return;
+  for (let letter of string) {
+    if (!letter.match(/[a-z]/i)) continue;
 
     letter = letter.toUpperCase();
     letters[letter] ||= 0;
-    letters[letter] += 1;
-  });
+    letters[letter]++;
+  }
 
   return letters;
 }
@@ -15,20 +15,20 @@ function getLettersFromString(string) {
 function countLetters(multiDimensionArray) {
   const letters = {};
 
-  multiDimensionArray.forEach((el) => {
+  for (let element of multiDimensionArray) {
     let newLetters = {};
 
-    if (typeof el === "string") {
-      newLetters = getLettersFromString(el);
-    } else if (Array.isArray(el)) {
-      newLetters = countLetters(el);
+    if (Array.isArray(element)) {
+      newLetters = countLetters(element);
+    } else if (typeof element === "string") {
+      newLetters = getLettersFromString(element);
     }
 
-    Object.keys(newLetters).forEach((letter) => {
+    for (let letter in newLetters) {
       letters[letter] ||= 0;
       letters[letter] += newLetters[letter];
-    });
-  });
+    }
+  }
 
   return letters;
 }
