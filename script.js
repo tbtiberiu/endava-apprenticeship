@@ -1,33 +1,22 @@
-function countElementsByLevel(srcDOMElement, childElementName) {
+function countElementsByLevel(srcDOMElement, childElementName, level = 0) {
   let result = {};
-  let level = 0,
-    count = 0;
-  let itemsOnlevels = [1];
-  let queue = [srcDOMElement];
 
-  while (queue.length > 0) {
-    let currentElement = queue.shift();
-    let children = currentElement.children;
+  const children = srcDOMElement.children;
 
-    itemsOnlevels[level + 1] ||= 0;
-    itemsOnlevels[level + 1] += children.length;
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i];
 
-    for (let i = 0; i < children.length; i++) {
-      queue.push(children[i]);
-    }
+    const tagName = child.tagName.toLowerCase();
+    childElementName = childElementName.toLowerCase();
 
-    if (currentElement.tagName.toLowerCase() === childElementName) {
-      const key = `level${level}`;
+    if (tagName === childElementName) {
+      const key = tagName + level;
       result[key] ||= 0;
       result[key]++;
     }
 
-    count++;
-
-    if (count === itemsOnlevels[level]) {
-      count = 0;
-      level++;
-    }
+    const childResult = countElementsByLevel(child, childElementName, level + 1);
+    result = { ...result, ...childResult };
   }
 
   return result;
